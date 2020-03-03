@@ -1,0 +1,6 @@
+services:
+    HalloVerden\ResponseEntityBundle\Interfaces\ResponseEntityServiceInterface:
+        class: HalloVerden\ResponseEntityBundle\Services\ResponseEntityService
+        arguments:
+            $serializer: '@jms_serializer.serializer'
+            $requestStack: '@request_stack'
