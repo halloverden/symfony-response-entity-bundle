@@ -4,3 +4,4 @@ services:
         arguments:
             $serializer: '@jms_serializer.serializer'
             $requestStack: '@request_stack'
+            $dispatcher: '@event_dispatcher'
