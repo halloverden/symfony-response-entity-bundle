@@ -3,6 +3,7 @@
 
 namespace HalloVerden\ResponseEntityBundle\Services;
 
+use HalloVerden\ResponseEntityBundle\Event\PreResponseEntitySerializationEvent;
 use HalloVerden\ResponseEntityBundle\Interfaces\ResponseEntityInterface;
 use HalloVerden\ResponseEntityBundle\Interfaces\ResponseEntityLinksInterface;
 use HalloVerden\ResponseEntityBundle\Interfaces\ResponseEntityServiceInterface;
@@ -11,6 +12,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ResponseEntityService implements ResponseEntityServiceInterface {
 
@@ -25,14 +27,21 @@ class ResponseEntityService implements ResponseEntityServiceInterface {
   private $requestStack;
 
   /**
+   * @var EventDispatcherInterface
+   */
+  private $dispatcher;
+
+  /**
    * ResponseEntityService constructor.
    *
-   * @param SerializerInterface $serializer
-   * @param RequestStack        $requestStack
+   * @param SerializerInterface      $serializer
+   * @param RequestStack             $requestStack
+   * @param EventDispatcherInterface $dispatcher
    */
-  public function __construct(SerializerInterface $serializer, RequestStack $requestStack) {
+  public function __construct(SerializerInterface $serializer, RequestStack $requestStack, EventDispatcherInterface $dispatcher) {
     $this->serializer = $serializer;
     $this->requestStack = $requestStack;
+    $this->dispatcher = $dispatcher;
   }
 
   /**
@@ -51,7 +60,10 @@ class ResponseEntityService implements ResponseEntityServiceInterface {
       $this->addLinks($responseEntity);
     }
 
-    $json = $this->serializer->serialize($responseEntity, 'json', $context);
+    $event = new PreResponseEntitySerializationEvent($context, $responseEntity);
+    $this->dispatcher->dispatch($event);
+
+    $json = $this->serializer->serialize($event->getResponseEntity(), 'json', $event->getContext());
 
     return JsonResponse::fromJsonString($json, $responseEntity->getStatusCode());
   }
