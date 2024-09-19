@@ -7,11 +7,6 @@ namespace HalloVerden\ResponseEntityBundle\Entity;
 use HalloVerden\ResponseEntityBundle\Interfaces\ResponseEntityLinksInterface;
 use JMS\Serializer\Annotation as Serializer;
 
-/**
- * Class AbstractResponseEntityLinks
- *
- * @package HalloVerden\ResponseEntityBundle\Entity
- */
 abstract class AbstractResponseEntityLinks extends AbstractResponseEntity implements ResponseEntityLinksInterface {
 
   /**
