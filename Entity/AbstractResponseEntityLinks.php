@@ -11,13 +11,12 @@ abstract class AbstractResponseEntityLinks extends AbstractResponseEntity implem
 
   /**
    * @var array<string, string>
-   *
-   * @Serializer\SerializedName("links")
-   * @Serializer\Type(name="array<string, string>")
-   * @Serializer\Expose(if="object.getLinks() !== []")
-   * @Serializer\Groups({ResponseEntityLinksInterface::LINKS_SERIALIZER_GROUP})
    */
-  protected $links = [];
+  #[Serializer\SerializedName('links')]
+  #[Serializer\Type(name: 'array<string, string>')]
+  #[Serializer\Expose(if: 'object.getLinks() !== []')]
+  #[Serializer\Groups(groups: [ResponseEntityLinksInterface::LINKS_SERIALIZER_GROUP])]
+  protected array $links = [];
 
   /**
    * @inheritDoc

@@ -8,6 +8,7 @@ use HalloVerden\ResponseEntityBundle\Interfaces\ResponseEntityInterface;
 use HalloVerden\ResponseEntityBundle\Interfaces\ResponseEntityServiceInterface;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractResponseEntityController {
   const SERIALIZER_GROUPS = null;
@@ -18,12 +19,11 @@ abstract class AbstractResponseEntityController {
   protected $responseEntityService;
 
   /**
-   * @required
-   *
    * @param ResponseEntityServiceInterface $responseEntityService
    *
    * @return AbstractResponseEntityController
    */
+  #[Required]
   public function setResponseEntityService(ResponseEntityServiceInterface $responseEntityService): self {
     $this->responseEntityService = $responseEntityService;
     return $this;
@@ -39,7 +39,7 @@ abstract class AbstractResponseEntityController {
   }
 
   /**
-   * @return array
+   * @return array|null
    */
   protected function getSerializerGroups(): ?array {
     return static::SERIALIZER_GROUPS;
